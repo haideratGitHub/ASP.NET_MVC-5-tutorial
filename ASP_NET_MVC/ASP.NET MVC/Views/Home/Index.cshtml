@@ -1,0 +1,307 @@
+﻿@model ASP.NET_MVC.Models.Employee
+@using ASP.NET_MVC.Models
+<h2>Index</h2>
+<a href="/Home/MyProfile">Go to Profile</a>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js">
+</script>
+
+@*<h1>ID:@Model.ID</h1>
+    <h1>NAME:@Model.Name</h1>*@
+<div>
+    @DateTime.Now
+</div>
+<div>
+    @(5 - 3)
+</div>
+@{
+    var a = 1;
+    var b = 2;
+    var c = a + b;
+    var tommorrowTime = DateTime.Now.AddDays(1);
+}
+<div>
+    @c
+</div>
+<div>
+    @tommorrowTime
+</div>
+<div>
+    @*Razor is intelligent to identify to ignore @ in any email but it will create problem for usernames like @haider_aabbas*@
+    @*To solve this problem use @@*@
+    haiderabbas@gmail.com
+    Follow on twitter - @@haider_aabbas
+</div>
+
+
+
+<div>
+    @helper MyListHelper(string[] Names)
+    {
+        <ul>
+            @foreach (var item in Names)
+            {
+                <li>@item</li>
+            }
+
+        </ul>
+    }
+</div>
+<div>
+    @MyListHelper(new string[] { "haider", "abbas", "ali" })
+</div>
+
+<div>
+    @Html.ActionLink("Click me", "MyProfile")
+</div>
+<div>
+    @using (Html.BeginForm("myForm"))
+    {
+        @Html.TextBoxFor(x => x.ID)
+        <br />
+        <br />
+        @Html.TextBoxFor(x => x.Name)
+    }
+</div>
+
+<div>
+    @using (Html.BeginForm("myForm"))
+    {
+        //right now the input for date of birth is not date but it is textinput, we'll use data annotation above DOB property to make this input date type
+        @Html.EditorForModel()
+        <input type="submit" value="Press me" />
+    }
+</div>
+<div>
+    @CustomHelper.CustomImageHelper.Image("https://cdn2.vectorstock.com/i/1000x1000/20/76/man-avatar-profile-vector-21372076.jpg", "This is image rendered by custom HTML helper", "100", "100")
+</div>
+<div>
+    <h2>@ViewBag.MyName</h2>
+    <h2>@ViewData["KeyForName"]</h2>
+</div>
+
+<div>
+    <section>
+        <h4>Pass data using parameters</h4>
+        @using (Html.BeginForm("PostUsingParameters", "Home"))
+        {
+            <input type="text" name="firstName" /><br />
+            <input type="text" name="lastName" /><br />
+            <br />
+            <input type="submit" value="Click me" />
+        }
+    </section>
+    <hr />
+    <section>
+        <h4>Pass data using request</h4>
+        @using (Html.BeginForm("PostUsingRequest", "Home"))
+        {
+            <input type="text" name="firstName" /><br />
+            <input type="text" name="lastName" /><br />
+            <br />
+            <input type="submit" value="Click me" />
+        }
+    </section>
+    <hr />
+    <section>
+        <h4>Pass data using Form collection</h4>
+        @using (Html.BeginForm("PostUsingFormCollection", "Home"))
+        {
+            <input type="text" name="firstName" /><br />
+            <input type="text" name="lastName" /><br />
+            <br />
+            <input type="submit" value="Click me" />
+        }
+    </section>
+    <br />
+    <br />
+    <br />
+    <hr />
+</div>
+
+<div>
+    @using (Html.BeginForm("SubmitData", "Home", FormMethod.Post))
+    {
+        @Html.TextBox("firstName")<br />
+        @Html.ValidationMessage("firstName")<br />
+        @Html.TextBox("lastName")<br />
+        @Html.ValidationMessage("lastName")<br />
+        @Html.TextBox("Email")<br />
+        @Html.ValidationMessage("Email")<br />
+        @Html.Editor("Age")<br />
+        @Html.ValidationMessage("Age")<br />
+        <br />
+        <input type="submit" value="Click me" />
+    }
+</div>
+<br />
+<br />
+<br />
+<hr />
+<div>
+    @using (Html.BeginForm("SubmitData", "Home", FormMethod.Post))
+    {
+        @Html.ValidationSummary()
+
+        @Html.TextBox("firstName")<br />
+
+        @Html.TextBox("lastName")<br />
+
+        @Html.TextBox("Email")<br />
+
+        @Html.Editor("Age")<br />
+
+        <br />
+        <input type="submit" value="Click me" />
+    }
+</div>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section RenderName
+{
+    <h1>Haider Abbas</h1>
+}
+
+<div>
+    <h1>This is Index  page</h1>
+    <a href="/Employees">Get List</a><br />
+    <a href="/NewEmployees">Add new</a><br />
+</div>
+
+<div>
+    <h1>Hello I am from jQuery</h1>
+    <input type="submit" onclick="BtnClick()" value="click me" />
+</div>
+<br />
+<hr />
+<div>
+    <h2>Id</h2> - <h2 id="EmpID"></h2>
+    <h2>Name</h2> - <h2 id="EmpName"></h2>
+    <input type="button" onclick="Btn2Click()" value="click me" />
+</div>
+<br />
+<hr />
+<div>
+    @using (Html.BeginForm("AddEmployee", "Home", FormMethod.Post))
+    {
+
+        @Html.TextBox("ID")<br />
+
+        @Html.TextBox("Name")<br />
+
+        <br />
+        <input type="submit" value="Send data" />
+
+    }
+</div>
+
+<br />
+<hr />
+<div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    @{AjaxOptions options = new AjaxOptions();
+        options.HttpMethod = "POST";
+        options.Confirm = "Do you wish to submit this form?";
+        options.OnBegin = "OnBegin";
+        options.OnComplete = "OnComplete";
+        options.OnFailure = "OnFailure";
+        options.OnSuccess = "OnSuccess";
+        options.LoadingElementId = "divProgress";
+        options.LoadingElementDuration = 1000;
+        options.UpdateTargetId = "divResponse";
+        options.InsertionMode = InsertionMode.InsertAfter;
+    }
+    @using (Ajax.BeginForm("Index", "Home", options))
+    {
+        <div>
+            @Html.EditorFor(x => x.ID)<br />
+            @Html.EditorFor(x => x.Name)<br />
+            <input type="submit" value="click me" />
+        </div>
+
+    }
+</div>
+<br />
+<hr />
+
+<div>
+    @for (int i = 0; i < 10; i++)
+    {
+        @Html.Partial("_card")
+    }
+</div>
+
+<div>
+    <h1>Output cache</h1>
+    <h3>Time is @DateTime.Now</h3>
+</div>
+
+<br />
+<hr />
+
+<div>
+    @using (Html.BeginForm("Index","Home",FormMethod.Post, new { @enctype = "multipart/form-data"}))
+    {
+        <input type="file" name="fileBase"/>
+        <br />
+        <input type="submit" value="save" />
+    }
+</div>
+
+<script type="text/javascript">
+    function OnSuccess() {
+        alert("Hello from success");
+    }
+    function OnFailure() {
+
+        alert("Hello from failure");
+    }
+</script>
+
+
+@*<script>
+        function BtnClick() {
+            alert("I am added from jQuery");
+            }
+        function Btn2Click() {
+            $.ajax({
+                url: "/Home/GetEmployee",
+                method: "GET",
+                success: function (data) {
+                    console.log(data);
+                    data = JSON.parse(data);
+                    $('#EmpID').text(data.ID);
+                    $('#EmpName').text(data.Name);
+                },
+                Error: function (err) {
+                    console.log(err);
+                }
+            })
+        }
+        function GetEmployee() {
+            var id = $('#ID').val();
+            var name = $('#Name').val();
+            var obj = {
+                ID: id,
+                Name: name
+            }
+            $.ajax({
+                url: "/Home/AddEmployee",
+                method: "POST",
+                data: obj,
+                success: function (data) {
+                    alert(data);
+                    console.log(data);
+
+                },
+                Error: function (err) {
+                    console.log(err);
+                }
+            })
+        }
+
+    </script>*@
